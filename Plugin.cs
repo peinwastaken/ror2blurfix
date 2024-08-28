@@ -7,7 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace ror2blurfix
 {
-    [BepInPlugin("com.pein.rorblurfix", "Risk of Rain 2 Blur fix", "1.0.0")]
+    [BepInPlugin("com.pein.rorblurfix", "Risk of Rain 2 Blur fix", "1.0.1")]
     public class Plugin : BaseUnityPlugin
     {
         public static new ManualLogSource Logger;
