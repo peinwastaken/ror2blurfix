@@ -1,7 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using System.Reflection;
+using RoR2;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -11,8 +11,6 @@ namespace ror2blurfix
     public class Plugin : BaseUnityPlugin
     {
         public static new ManualLogSource Logger;
-        public Camera GetCamera() => Camera.main;
-        public PostProcessLayer GetPPLayer() => GetCamera().GetComponent<PostProcessLayer>();
 
         private void Awake()
         {
@@ -23,15 +21,14 @@ namespace ror2blurfix
         }
     }
 
-    [HarmonyPatch(typeof(PostProcessLayer), "RenderFinalPass")]
-    public class PostProcessLayerOnEnablePatch
+    [HarmonyPatch(typeof(CameraRigController), "Start")]
+    public class CameraControllerPatch
     {
-        public static PostProcessLayer GetPPLayer() => Camera.main.GetComponentInChildren<PostProcessLayer>();
-
-        static bool Prefix(PostProcessLayer __instance, PostProcessRenderContext context, int releaseTargetAfterUse, int eye)
+        static void Postfix(CameraRigController __instance)
         {
-            __instance.antialiasingMode = PostProcessLayer.Antialiasing.None;
-            return true;
+            Camera sceneCam = __instance.sceneCam;
+            PostProcessLayer ppLayer = sceneCam.GetComponent<PostProcessLayer>();
+            ppLayer.antialiasingMode = PostProcessLayer.Antialiasing.None;
         }
     }
 }
